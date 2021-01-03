@@ -46,34 +46,34 @@ X_test = X_test.astype('float32') / 255
   """
   Create a CAE:
   """
-  input_shape = (32, 32, 3)
+input_shape = (32, 32, 3)
   
-  model = Sequential()
+model = Sequential()
   # L1 Convolution layer with window size of (3,3):
-  model.add(Conv2D(filters=8, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_1'))
+model.add(Conv2D(filters=8, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_1'))
   # L2 MaxPool:
-  model.add(MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
   # L3 Convolution layer with window size of (3,3):
-  model.add(Conv2D(filters=12, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_2'))
+model.add(Conv2D(filters=12, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_2'))
   # L4 MaxPool:
-  model.add(MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
   # L5 Convolution layer with window size of (3,3): Latent Space Represantation
-  model.add(Conv2D(filters=16, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_3'))
+model.add(Conv2D(filters=16, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_3'))
   # L6 Upsample 2x2
-  model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
+model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
   # L7 Convolution layer with window size of (3,3):
-  model.add(Conv2D(filters=12, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_4'))
+model.add(Conv2D(filters=12, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=input_shape, name='conv_4'))
   # L8 Upsample 2x2
-  model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
+model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
   # L9 Convolution layer with window size of (3,3):
-  model.add(Conv2D(filters=3, kernel_size=(3, 3), strides=1, padding='same', activation='softmax', input_shape=input_shape, name='output'))
+model.add(Conv2D(filters=3, kernel_size=(3, 3), strides=1, padding='same', activation='softmax', input_shape=input_shape, name='output'))
 
-  model.summary()
+model.summary()
 
-  # Run CAE
-  lowest_loss = 1
-  model_json = []
-  def run_CAE(my_model, batch_size = 48, epochs = 20, lowest_loss=lowest_loss, json_string=model_json):
+ # Run CAE
+lowest_loss = 1
+model_json = []
+def run_CAE(my_model, batch_size = 48, epochs = 20, lowest_loss=lowest_loss, json_string=model_json):
     model = my_model
     model.compile(loss=keras.losses.mean_squared_error,
                   optimizer=keras.optimizers.Adam(learning_rate=0.0001),
@@ -101,22 +101,22 @@ X_test = X_test.astype('float32') / 255
       trainning,_,_,_ = run_CAE(model)
 
   # Loss
-  plt.plot(trainning.history['loss'])
-  plt.plot(trainning.history['val_loss'])
-  plt.title('the loss with epochs')
-  plt.ylabel('loss')
-  plt.xlabel('epoch')
-  plt.legend(['train', 'valid'], loc='upper right')
-  plt.show()
+plt.plot(trainning.history['loss'])
+plt.plot(trainning.history['val_loss'])
+plt.title('the loss with epochs')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'valid'], loc='upper right')
+plt.show()
   
   # Accuracy
-  plt.plot(trainning.history['accuracy'])
-  plt.plot(trainning.history['val_accuracy'])
-  plt.title('the accuracy with epochs')
-  plt.ylabel('accuracy')
-  plt.xlabel('epoch')
-  plt.legend(['train', 'valid'], loc='upper right')
-  plt.show()
+plt.plot(trainning.history['accuracy'])
+plt.plot(trainning.history['val_accuracy'])
+plt.title('the accuracy with epochs')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'valid'], loc='upper right')
+plt.show()
 def build_CAE(input_shape, strides, kernel_size, layer_filters):
   # Encoder
   input = Input(shape=input_shape, name='Input_layer')
@@ -149,7 +149,7 @@ def build_CAE(input_shape, strides, kernel_size, layer_filters):
   return autoencoder
   
   
-  input_shape = (32, 32, 3) 
+input_shape = (32, 32, 3) 
 batch_size = 48
 kernel_size = 3
 strides = 1
@@ -191,23 +191,23 @@ lab_val = rgb2lab(X_val)
 X_lab_val = lab_val[:,:,:,0].reshape(lab_val.shape[0], 32, 32, 1)
 y_lab_val = lab_val[:,:,:,1:]/128
 
-  input_shape = (32,32,1)
-  model = Sequential()
-  model.add(Conv2D(filters=64, kernel_size=(3, 3), strides=2, padding='same', activation='relu', input_shape=input_shape, name='conv_1'))
-  model.add(Conv2D(filters=128, kernel_size=(3, 3), strides=2, padding='same', activation='relu',  name='conv_4'))
-  model.add(Conv2D(filters=256, kernel_size=(3, 3), strides=2, padding='same', activation='relu',  name='conv_5'))
-  model.add(Conv2D(filters=512, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_6'))
-  model.add(Conv2D(filters=256, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_7'))
-  model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
-  model.add(Conv2D(filters  =128, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_8'))
-  model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
-  model.add(Conv2D(filters=2, kernel_size=(3, 3), strides=1, padding='same', activation='tanh', name='output'))
-  model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
-  model.summary()
+input_shape = (32,32,1)
+model = Sequential()
+model.add(Conv2D(filters=64, kernel_size=(3, 3), strides=2, padding='same', activation='relu', input_shape=input_shape, name='conv_1'))
+model.add(Conv2D(filters=128, kernel_size=(3, 3), strides=2, padding='same', activation='relu',  name='conv_4'))
+model.add(Conv2D(filters=256, kernel_size=(3, 3), strides=2, padding='same', activation='relu',  name='conv_5'))
+model.add(Conv2D(filters=512, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_6'))
+model.add(Conv2D(filters=256, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_7'))
+model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
+model.add(Conv2D(filters  =128, kernel_size=(3, 3), strides=1, padding='same', activation='relu',  name='conv_8'))
+model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
+model.add(Conv2D(filters=2, kernel_size=(3, 3), strides=1, padding='same', activation='tanh', name='output'))
+model.add(UpSampling2D(size=(2, 2), interpolation="nearest"))
+model.summary()
   
-  model.compile(loss=keras.losses.mean_squared_error,
-                  optimizer=keras.optimizers.Adam(learning_rate=0.0001),
-                  metrics=['accuracy'])
+model.compile(loss=keras.losses.mean_squared_error,
+                optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+                metrics=['accuracy'])
 
 model.fit(X_lab_train, y_lab_train, batch_size=48, validation_data=(X_lab_val, y_lab_val), steps_per_epoch=1000 ,epochs=10, verbose=2)
 
