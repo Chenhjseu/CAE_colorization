@@ -8,7 +8,7 @@ Links are provided to download the dataset in a format already prepared for pyth
 • Matlab – Look up the helperCIFAR10Data function.
 • Pytorch – Look up the torchvision.datasets.CIFAR10 class.
 
-## 必要库
+## Libraries
 ```
 import numpy as np
 import matplotlib.pyplot as plt
